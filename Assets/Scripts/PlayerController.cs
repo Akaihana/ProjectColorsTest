@@ -32,6 +32,8 @@ public class PlayerController : MonoBehaviour
     public GameObject bullet3;
     public GameObject bullet4;
 
+    public GameObject laser1;
+
     //normal bullet spawn points
  	public GameObject bulletSpawn1;
 	public GameObject bulletSpawn2;
@@ -222,7 +224,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (playerLevel == 1)
                     {
-                        Instantiate(bullet3, this.transform.position, Quaternion.Euler(0, 0, 0));
+                        Instantiate(laser1, this.transform.position, Quaternion.Euler(0, 0, 0));
                         Instantiate(bullet3, orbiter1.transform.position, Quaternion.Euler(0, 0, 0));
                     }
                     else if (playerLevel == 2)

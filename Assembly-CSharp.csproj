@@ -47,6 +47,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\Boundary.cs" />
      <Compile Include="Assets\Scripts\BulletMove.cs" />
+     <Compile Include="Assets\Scripts\LaserMove.cs" />
      <Compile Include="Assets\Scripts\PlayerController.cs" />
      <Compile Include="Assets\Scripts\_Notes.cs" />
  <Reference Include="UnityEngine.UI">

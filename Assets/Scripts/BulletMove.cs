@@ -9,11 +9,13 @@ public class BulletMove : MonoBehaviour {
 	public float bulletSpeed;
 	
 	// Update is called once per frame
-	void Update () {
-		this.deleteBullet();
+	void Update ()
+    {
+		this.moveBullet();
 	}
 
-	void deleteBullet(){
+	public void moveBullet()
+    {
 	
 		transform.Translate(Vector3.up * bulletSpeed);
 
