@@ -1,12 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LaserMove : MonoBehaviour
+public class LaserMoveMain : BulletMove
 {
-    public float maxX = 8f;
-    public float maxY = 10f;
 
-    public float bulletSpeed;
     //public GameObject ReferencePoint;
 	// Use this for initialization
 	void Start ()
@@ -17,16 +14,12 @@ public class LaserMove : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
+        this.handleLaser();
         this.moveBullet();
 	}
 
-    public void moveBullet()
+    void handleLaser()
     {
         transform.position = new Vector3(GameObject.FindGameObjectWithTag("Player").transform.position.x, transform.position.y, transform.position.z);
-        transform.Translate(Vector3.up * bulletSpeed);
-
-        if (transform.position.y >= maxY || transform.position.y <= -maxY || transform.position.x >= maxX || transform.position.x <= -maxX)
-            Destroy(this.gameObject);
-
     }
 }

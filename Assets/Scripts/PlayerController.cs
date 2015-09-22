@@ -6,6 +6,9 @@ public class PlayerController : MonoBehaviour
     //variable declaration
 	public float playerLevel = 1;                   //ship level
 	public float moveSpeed = 0.1f;                  //ship move speed
+    public float specialMeter = 0;
+    float specialMeterMax = 100;
+    float specialCost1 = 25;                  
     private bool special = false;
     private float specialTime = 2f;
     private float specialTimeFinish = 0f;
@@ -26,13 +29,12 @@ public class PlayerController : MonoBehaviour
     private float bulletRotationOffset2 = 16f;      //bullet rotation offset 2
 
     private float specialOffset = 0f;
+
     //bullets
 	public GameObject bullet1;
 	public GameObject bullet2;
     public GameObject bullet3;
     public GameObject bullet4;
-
-    public GameObject laser1;
 
     //normal bullet spawn points
  	public GameObject bulletSpawn1;
@@ -87,6 +89,7 @@ public class PlayerController : MonoBehaviour
 		this.controlOrbiter();
 	}
 
+    //function to move the player
 	void movePlayer()
     {
         //player movement using translation
@@ -124,29 +127,37 @@ public class PlayerController : MonoBehaviour
 		else
 			shipFocus = false;
 
+        //the ship focus, when in focus lower the ships speed
 		if (shipFocus)
 			moveSpeed = 0.05f;
 		else
 			moveSpeed = 0.1f;
 
+
+        //debugging buttons for testing ship levels
         if (Input.GetKeyDown("1"))
         {
             playerLevel = 1;
+            destination = false;
         }
         else if (Input.GetKeyDown("2"))
         {
             playerLevel = 2;
+            destination = false;
         }
         else if (Input.GetKeyDown("3"))
         {
             playerLevel = 3;
+            destination = false;
         }
         else if (Input.GetKeyDown("4"))
         {
             playerLevel = 4;
+            destination = false;
         }
     }
 
+    //function to handle normal and unique player shots
 	void shootBullet()
     {
 		if (Input.GetButton("Fire1") && Time.time > bulletTime1)
@@ -224,7 +235,7 @@ public class PlayerController : MonoBehaviour
                 {
                     if (playerLevel == 1)
                     {
-                        Instantiate(laser1, this.transform.position, Quaternion.Euler(0, 0, 0));
+                        Instantiate(bullet3, this.transform.position, Quaternion.Euler(0, 0, 0));
                         Instantiate(bullet3, orbiter1.transform.position, Quaternion.Euler(0, 0, 0));
                     }
                     else if (playerLevel == 2)
@@ -254,14 +265,28 @@ public class PlayerController : MonoBehaviour
 		}
 	}
 
+    //function to handle Special Activation
     void shootSpecial()
     {
-        if (Input.GetButtonDown("SpecialFire1") && !special)
+        //special meter cannot exceed the maximum special meter amount
+        if(specialMeter >= specialMeterMax)
+        {
+            specialMeter = specialMeterMax;
+        }
+
+        //if special is pressed
+        if (Input.GetButtonDown("SpecialFire1") && !special && specialMeter >= specialCost1)
         {
             Debug.Log("Special!");
             special = true;
+            specialMeter -= 25;
             specialTimeFinish = specialTime + Time.time;
         }
+        //if special is pressed but not enough meter
+        else if(Input.GetButtonDown("SpecialFire1") && !special && specialMeter <= specialCost1)
+            Debug.Log("Not enough meter!");
+
+        //activate special pattern
         if (special)
         {
             Instantiate(bullet4, this.transform.position, Quaternion.Euler(0, 0, -specialOffset));
@@ -276,8 +301,10 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    //function to handle the controls of the orbiters
 	void controlOrbiter()
     {
+        //depending on orbiter level, certain orbiters are active
 		if (playerLevel == 1)
         {
 			orbiter1.SetActive(true);
@@ -307,6 +334,7 @@ public class PlayerController : MonoBehaviour
 			orbiter4.SetActive(true);
 		}
 
+        //when holding Focus, if the orbiters are at the intended locations for rotation
         if (!destination)
         {
             if (playerLevel == 1)
@@ -334,6 +362,8 @@ public class PlayerController : MonoBehaviour
             else
                 destination = false;
         }
+
+        //if holding focus, rotate the Orbiters
         if (shipFocus)
         {
 			if (playerLevel == 1)
