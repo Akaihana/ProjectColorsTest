@@ -47,9 +47,10 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\Boundary.cs" />
      <Compile Include="Assets\Scripts\BulletMove.cs" />
-     <Compile Include="Assets\Scripts\LaserMove.cs" />
      <Compile Include="Assets\Scripts\PlayerController.cs" />
-     <Compile Include="Assets\Scripts\_Notes.cs" />
+     <Compile Include="Assets\Scripts\SpecialShot.cs" />
+     <Compile Include="Assets\Scripts\_LaserScripts\LaserMove1.cs" />
+     <Compile Include="Assets\Scripts\_LaserScripts\LaserMoveMain.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
