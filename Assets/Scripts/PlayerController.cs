@@ -6,14 +6,13 @@ public class PlayerController : MonoBehaviour
     //variable declaration
     public float playerLevel = 1;                   //ship level
     public float moveSpeed = 0.1f;                  //ship move speed
+
     public float specialMeter = 0;
     private float specialMeterMax = 100;
     private float specialCost1 = 25;
     private bool special = false;
-    private float specialTime = 3f;
+    private float specialTime = 4f;
     private float specialTimeFinish = 0f;
-    public GameObject[] specialBullets = new GameObject[16];
-
     private bool[] specialInterval = { false, false };
 
     private float maxX = 3.35f;                     //player boundary maximum x
@@ -270,18 +269,27 @@ public class PlayerController : MonoBehaviour
         //activate special pattern
         if (special)
         {
-
+            moveSpeed = 0.005f;
             if (!specialInterval[0])
             {
-                specialBullets[0] = (GameObject)Instantiate(bullets[3], this.transform.position, Quaternion.Euler(0, 0, 0));
+                for (int i = 0; i < 8; i++)
+                {
+                    Instantiate(bullets[3], this.transform.position, Quaternion.Euler(0, 0, specialOffset));
+                    specialOffset += 45;
+                }
                 specialInterval[0] = true;
             }
-            else
+            else if (!specialInterval[1] && Time.time > specialTimeFinish - 3f)
             {
-                specialBullets[0].transform.RotateAround(this.transform.position, Vector3.forward, rotationSpeed * Time.deltaTime);
-                specialBullets[0].transform.Translate(Vector3.up * 0.005f);
+                specialOffset = 22.5f;
+                for (int i = 0; i < 8; i++)
+                {
+                    Instantiate(bullets[3], this.transform.position, Quaternion.Euler(0, 0, specialOffset));
+                    specialOffset += 45;
+                }
+                specialInterval[1] = true;
             }
-            
+
             if (Time.time > specialTimeFinish) 
             {
                 special = false;

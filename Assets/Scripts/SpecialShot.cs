@@ -5,7 +5,7 @@ public class SpecialShot : BulletMove
 {
     public float specialDelay = 3f;
     public float specialTime = 0f;
-    public float rotationSpeed = 300f;
+    public float rotationSpeed;
 
 	// Use this for initialization
 	void Start ()
@@ -21,21 +21,14 @@ public class SpecialShot : BulletMove
 
     void shootSpecial()
     {
-
-        //Debug.Log(GameObject.FindGameObjectWithTag("Player").transform.position);
-        //Vector3 reference = GameObject.FindGameObjectWithTag("Player").transform.position;
-
-
         if (Time.time >= specialTime)
         {
             this.moveBullet();
         }
         else
         {
-            //this.transform.RotateAround(GameObject.FindGameObjectWithTag("Player").transform.position, Vector3.forward, rotationSpeed * Time.deltaTime);
-           
-            //this.transform.position = GameObject.FindGameObjectWithTag("Player").transform.position;
-            //this.transform.Translate(Vector3.up * 0.01f);
+            this.transform.RotateAround(GameObject.FindGameObjectWithTag("Player").transform.position, Vector3.forward, rotationSpeed * Time.deltaTime);
+            this.transform.Translate(Vector3.up * 0.0075f);
         }
     }
 }
