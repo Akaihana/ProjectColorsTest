@@ -259,17 +259,25 @@ public class PlayerController : MonoBehaviour
             {
                 if (!shipFocus)
                 {
+                    
                     if (Time.time > bulletTime[0])
                     {
+                        /*
                         Instantiate(overdriveBullets[0], bulletSpawn[0].transform.position, bulletSpawn[0].transform.rotation);
                         Instantiate(overdriveBullets[0], bulletSpawn[1].transform.position, bulletSpawn[1].transform.rotation);
                         Instantiate(overdriveBullets[0], new Vector3(bulletSpawn[0].transform.position.x - 0.2f, bulletSpawn[0].transform.position.y - 0.2f, bulletSpawn[0].transform.position.x), bulletSpawn[0].transform.rotation);
                         Instantiate(overdriveBullets[0], new Vector3(bulletSpawn[1].transform.position.x + 0.2f, bulletSpawn[1].transform.position.y - 0.2f, bulletSpawn[0].transform.position.x), bulletSpawn[0].transform.rotation);
 
                         bulletTime[0] = Time.time + bulletDelay[0];
-                    }
-                    if (Time.time > bulletTime[1])
-                    {
+                        */
+                    //}
+                    //if (Time.time > bulletTime[0])
+                    //{
+                        //Instantiate(overdriveBullets[1], orbiters[2].transform.position, Quaternion.Euler(0, 0, -60));
+                        Instantiate(overdriveBullets[1], orbiters[2].transform.position, Quaternion.Euler(0, 0, Random.Range(-120f, -170f)));
+                        Instantiate(overdriveBullets[2], orbiters[1].transform.position, Quaternion.Euler(0, 0, Random.Range(120f, 170f)));
+
+                        /*
                         Instantiate(overdriveBullets[1], orbiters[0].transform.position, Quaternion.Euler(0, 0, 0));
                         Instantiate(overdriveBullets[1], new Vector3(orbiters[0].transform.position.x, orbiters[0].transform.position.y - bulletOffset[0], orbiters[0].transform.position.z), Quaternion.Euler(0, 0, 10));
                         Instantiate(overdriveBullets[1], new Vector3(orbiters[0].transform.position.x, orbiters[0].transform.position.y - bulletOffset[0], orbiters[0].transform.position.z), Quaternion.Euler(0, 0, -10));
@@ -293,14 +301,15 @@ public class PlayerController : MonoBehaviour
                         Instantiate(overdriveBullets[1], new Vector3(orbiters[3].transform.position.x, orbiters[3].transform.position.y - bulletOffset[0], orbiters[3].transform.position.z), Quaternion.Euler(0, 0, -10));
                         //Instantiate(overdriveBullets[1], new Vector3(orbiters[3].transform.position.x, orbiters[3].transform.position.y - bulletOffset[1], orbiters[3].transform.position.z), Quaternion.Euler(0, 0, 20));
                         //Instantiate(overdriveBullets[1], new Vector3(orbiters[3].transform.position.x, orbiters[3].transform.position.y - bulletOffset[1], orbiters[3].transform.position.z), Quaternion.Euler(0, 0, -20));
-
-                        bulletTime[1] = Time.time + bulletDelay[1];
+                        */
+                        bulletTime[0] = Time.time + bulletDelay[0];
                     }
                 }
                 else
                 {
                     if (Time.time > bulletTime[2])
                     {
+                        /*
                         Instantiate(overdriveBullets[1], this.transform.position, Quaternion.Euler(0, 0, 0));
                         Instantiate(overdriveBullets[1], orbiters[0].transform.position, Quaternion.Euler(0, 0, 0));
                         Instantiate(overdriveBullets[1], orbiters[1].transform.position, Quaternion.Euler(0, 0, 0));
@@ -308,6 +317,7 @@ public class PlayerController : MonoBehaviour
                         Instantiate(overdriveBullets[1], orbiters[3].transform.position, Quaternion.Euler(0, 0, 0));
 
                         bulletTime[2] = Time.time + bulletDelay[2];
+                        */
                     }
                 }
             } 

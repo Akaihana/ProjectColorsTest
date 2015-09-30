@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class BulletMove : MonoBehaviour {
+public class BulletMove : MonoBehaviour
+{
 	
 	public float maxX = 8f;
 	public float maxY = 10f;
