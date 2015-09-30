@@ -15,6 +15,12 @@ public class PlayerController : MonoBehaviour
     private float specialTimeFinish = 0f;
     private bool[] specialInterval = { false, false };
 
+    public float overdriveTime = 10f;
+    private float overdriveTimeFinish = 0f;
+    public bool overdrive = false;
+    //public bool overdrive = true;
+
+
     private float maxX = 3.35f;                     //player boundary maximum x
 	private float maxY = 4.85f;                     //player boundary maximum y
 
@@ -27,6 +33,7 @@ public class PlayerController : MonoBehaviour
 
     //bullets
     public GameObject[] bullets;
+    public GameObject[] overdriveBullets;
 
     //normal bullet spawn points
     public GameObject[] bulletSpawn = new GameObject[2];
@@ -62,8 +69,10 @@ public class PlayerController : MonoBehaviour
         this.shootBullet();
         //handles special shots
         this.shootSpecial();
+        this.handleOverdrive();
         //handles the control for the ship orbiters
 		this.controlOrbiter();
+        
 	}
 
     //function to move the player
@@ -137,109 +146,172 @@ public class PlayerController : MonoBehaviour
     //function to handle normal and unique player shots
 	void shootBullet()
     {
-		if (Input.GetButton("Fire1") && Time.time > bulletTime[0])
+        if (!overdrive)
         {
-			if (!shipFocus)
+            if (Input.GetButton("Fire1"))
             {
-				//normal ship fire
-				if (Time.time > bulletTime[0])
+                if (!shipFocus)
                 {
-					if (playerLevel >= 1)
+                    //normal ship fire
+                    if (Time.time > bulletTime[0])
                     {
-						Instantiate(bullets[0], bulletSpawn[0].transform.position, bulletSpawn[0].transform.rotation);
-						Instantiate(bullets[0], bulletSpawn[1].transform.position, bulletSpawn[1].transform.rotation);
-					}
-					bulletTime[0] = Time.time + bulletDelay[0];
-				}
-				//orbiter fire
-				if (Time.time > bulletTime[1])
-                {
-					if (playerLevel == 1)
+                        if (playerLevel >= 1)
+                        {
+                            Instantiate(bullets[0], bulletSpawn[0].transform.position, Quaternion.Euler(0, 0, 0));
+                            Instantiate(bullets[0], bulletSpawn[1].transform.position, Quaternion.Euler(0, 0, 0));
+                        }
+                        bulletTime[0] = Time.time + bulletDelay[0];
+                    }
+                    //orbiter fire
+                    if (Time.time > bulletTime[1])
                     {
-                        Instantiate(bullets[1], orbiters[0].transform.position, Quaternion.Euler(0, 0, 0)) ;
-						Instantiate(bullets[1], new Vector3(orbiters[0].transform.position.x, orbiters[0].transform.position.y - bulletOffset[0], orbiters[0].transform.position.z), Quaternion.Euler(0, 0, -bulletRotationOffset[0]));
-						Instantiate(bullets[1], new Vector3(orbiters[0].transform.position.x, orbiters[0].transform.position.y - bulletOffset[0], orbiters[0].transform.position.z), Quaternion.Euler(0, 0, bulletRotationOffset[0]));
-					}
-					else if (playerLevel == 2)
-                    {
-                        Instantiate(bullets[1], orbiters[1].transform.position, Quaternion.Euler(0, 0, 0));
-                        Instantiate(bullets[1], new Vector3(orbiters[1].transform.position.x, orbiters[1].transform.position.y - bulletOffset[0], orbiters[1].transform.position.z), Quaternion.Euler(0, 0, -bulletRotationOffset[0]));
-                        Instantiate(bullets[1], new Vector3(orbiters[1].transform.position.x, orbiters[1].transform.position.y - bulletOffset[0], orbiters[1].transform.position.z), Quaternion.Euler(0, 0, bulletRotationOffset[0]));
+                        if (playerLevel == 1)
+                        {
+                            Instantiate(bullets[1], orbiters[0].transform.position, Quaternion.Euler(0, 0, 0));
+                            Instantiate(bullets[1], new Vector3(orbiters[0].transform.position.x, orbiters[0].transform.position.y - bulletOffset[0], orbiters[0].transform.position.z), Quaternion.Euler(0, 0, -bulletRotationOffset[0]));
+                            Instantiate(bullets[1], new Vector3(orbiters[0].transform.position.x, orbiters[0].transform.position.y - bulletOffset[0], orbiters[0].transform.position.z), Quaternion.Euler(0, 0, bulletRotationOffset[0]));
+                        }
+                        else if (playerLevel == 2)
+                        {
+                            Instantiate(bullets[1], orbiters[1].transform.position, Quaternion.Euler(0, 0, 0));
+                            Instantiate(bullets[1], new Vector3(orbiters[1].transform.position.x, orbiters[1].transform.position.y - bulletOffset[0], orbiters[1].transform.position.z), Quaternion.Euler(0, 0, -bulletRotationOffset[0]));
+                            Instantiate(bullets[1], new Vector3(orbiters[1].transform.position.x, orbiters[1].transform.position.y - bulletOffset[0], orbiters[1].transform.position.z), Quaternion.Euler(0, 0, bulletRotationOffset[0]));
 
-                        Instantiate(bullets[1], orbiters[2].transform.position, Quaternion.Euler(0, 0, 0));
-                        Instantiate(bullets[1], new Vector3(orbiters[2].transform.position.x, orbiters[2].transform.position.y - bulletOffset[0], orbiters[2].transform.position.z), Quaternion.Euler(0, 0, -bulletRotationOffset[0]));
-                        Instantiate(bullets[1], new Vector3(orbiters[2].transform.position.x, orbiters[2].transform.position.y - bulletOffset[0], orbiters[2].transform.position.z), Quaternion.Euler(0, 0, bulletRotationOffset[0]));
-                    }
-					else if (playerLevel == 3)
-                    {
-						Instantiate(bullets[1], orbiters[0].transform.position, Quaternion.Euler(0, 0, 0));
-						Instantiate(bullets[1], new Vector3(orbiters[0].transform.position.x, orbiters[0].transform.position.y - bulletOffset[0], orbiters[0].transform.position.z), Quaternion.Euler(0, 0, -bulletRotationOffset[0]));
-						Instantiate(bullets[1], new Vector3(orbiters[0].transform.position.x, orbiters[0].transform.position.y - bulletOffset[0], orbiters[0].transform.position.z), Quaternion.Euler(0, 0, bulletRotationOffset[0]));
+                            Instantiate(bullets[1], orbiters[2].transform.position, Quaternion.Euler(0, 0, 0));
+                            Instantiate(bullets[1], new Vector3(orbiters[2].transform.position.x, orbiters[2].transform.position.y - bulletOffset[0], orbiters[2].transform.position.z), Quaternion.Euler(0, 0, -bulletRotationOffset[0]));
+                            Instantiate(bullets[1], new Vector3(orbiters[2].transform.position.x, orbiters[2].transform.position.y - bulletOffset[0], orbiters[2].transform.position.z), Quaternion.Euler(0, 0, bulletRotationOffset[0]));
+                        }
+                        else if (playerLevel == 3)
+                        {
+                            Instantiate(bullets[1], orbiters[0].transform.position, Quaternion.Euler(0, 0, 0));
+                            Instantiate(bullets[1], new Vector3(orbiters[0].transform.position.x, orbiters[0].transform.position.y - bulletOffset[0], orbiters[0].transform.position.z), Quaternion.Euler(0, 0, -bulletRotationOffset[0]));
+                            Instantiate(bullets[1], new Vector3(orbiters[0].transform.position.x, orbiters[0].transform.position.y - bulletOffset[0], orbiters[0].transform.position.z), Quaternion.Euler(0, 0, bulletRotationOffset[0]));
 
-						Instantiate(bullets[1], orbiters[1].transform.position, Quaternion.Euler(0, 0, 0));
-						Instantiate(bullets[1], new Vector3(orbiters[1].transform.position.x, orbiters[1].transform.position.y - bulletOffset[0], orbiters[1].transform.position.z), Quaternion.Euler(0, 0, bulletRotationOffset[0]));
-						Instantiate(bullets[1], new Vector3(orbiters[1].transform.position.x, orbiters[1].transform.position.y - bulletOffset[1], orbiters[1].transform.position.z), Quaternion.Euler(0, 0, bulletRotationOffset[1]));
-						
-						Instantiate(bullets[1], orbiters[2].transform.position, Quaternion.Euler(0, 0, 0));
-						Instantiate(bullets[1], new Vector3(orbiters[2].transform.position.x, orbiters[2].transform.position.y - bulletOffset[0], orbiters[2].transform.position.z), Quaternion.Euler(0, 0, -bulletRotationOffset[0]));
-						Instantiate(bullets[1], new Vector3(orbiters[2].transform.position.x, orbiters[2].transform.position.y - bulletOffset[1], orbiters[2].transform.position.z), Quaternion.Euler(0, 0, -bulletRotationOffset[1]));
-					}
-					else if (playerLevel == 4)
-                    {
-                        Instantiate(bullets[1], orbiters[0].transform.position, Quaternion.Euler(0, 0, 0));
-                        Instantiate(bullets[1], new Vector3(orbiters[0].transform.position.x, orbiters[0].transform.position.y - bulletOffset[0], orbiters[0].transform.position.z), Quaternion.Euler(0, 0, -bulletRotationOffset[0]));
-                        Instantiate(bullets[1], new Vector3(orbiters[0].transform.position.x, orbiters[0].transform.position.y - bulletOffset[0], orbiters[0].transform.position.z), Quaternion.Euler(0, 0, bulletRotationOffset[0]));
+                            Instantiate(bullets[1], orbiters[1].transform.position, Quaternion.Euler(0, 0, 0));
+                            Instantiate(bullets[1], new Vector3(orbiters[1].transform.position.x, orbiters[1].transform.position.y - bulletOffset[0], orbiters[1].transform.position.z), Quaternion.Euler(0, 0, bulletRotationOffset[0]));
+                            Instantiate(bullets[1], new Vector3(orbiters[1].transform.position.x, orbiters[1].transform.position.y - bulletOffset[1], orbiters[1].transform.position.z), Quaternion.Euler(0, 0, bulletRotationOffset[1]));
 
-                        Instantiate(bullets[1], orbiters[1].transform.position, Quaternion.Euler(0, 0, 0));
-						Instantiate(bullets[1], new Vector3(orbiters[1].transform.position.x, orbiters[1].transform.position.y - bulletOffset[0], orbiters[1].transform.position.z), Quaternion.Euler(0, 0, bulletRotationOffset[0]));
-						Instantiate(bullets[1], new Vector3(orbiters[1].transform.position.x, orbiters[1].transform.position.y - bulletOffset[1], orbiters[1].transform.position.z), Quaternion.Euler(0, 0, bulletRotationOffset[1]));
-						
-						Instantiate(bullets[1], orbiters[2].transform.position, Quaternion.Euler(0, 0, 0));
-						Instantiate(bullets[1], new Vector3(orbiters[2].transform.position.x, orbiters[2].transform.position.y - bulletOffset[0], orbiters[2].transform.position.z), Quaternion.Euler(0, 0, -bulletRotationOffset[0]));
-						Instantiate(bullets[1], new Vector3(orbiters[2].transform.position.x, orbiters[2].transform.position.y - bulletOffset[1], orbiters[2].transform.position.z), Quaternion.Euler(0, 0, -bulletRotationOffset[1]));
+                            Instantiate(bullets[1], orbiters[2].transform.position, Quaternion.Euler(0, 0, 0));
+                            Instantiate(bullets[1], new Vector3(orbiters[2].transform.position.x, orbiters[2].transform.position.y - bulletOffset[0], orbiters[2].transform.position.z), Quaternion.Euler(0, 0, -bulletRotationOffset[0]));
+                            Instantiate(bullets[1], new Vector3(orbiters[2].transform.position.x, orbiters[2].transform.position.y - bulletOffset[1], orbiters[2].transform.position.z), Quaternion.Euler(0, 0, -bulletRotationOffset[1]));
+                        }
+                        else if (playerLevel == 4)
+                        {
+                            Instantiate(bullets[1], orbiters[0].transform.position, Quaternion.Euler(0, 0, 0));
+                            Instantiate(bullets[1], new Vector3(orbiters[0].transform.position.x, orbiters[0].transform.position.y - bulletOffset[0], orbiters[0].transform.position.z), Quaternion.Euler(0, 0, -bulletRotationOffset[0]));
+                            Instantiate(bullets[1], new Vector3(orbiters[0].transform.position.x, orbiters[0].transform.position.y - bulletOffset[0], orbiters[0].transform.position.z), Quaternion.Euler(0, 0, bulletRotationOffset[0]));
 
-						Instantiate(bullets[1], orbiters[3].transform.position, Quaternion.Euler(0, 0, 0));
-						Instantiate(bullets[1], new Vector3(orbiters[3].transform.position.x, orbiters[3].transform.position.y - bulletOffset[0], orbiters[3].transform.position.z), Quaternion.Euler(0, 0, -bulletRotationOffset[0]));
-						Instantiate(bullets[1], new Vector3(orbiters[3].transform.position.x, orbiters[3].transform.position.y - bulletOffset[0], orbiters[3].transform.position.z), Quaternion.Euler(0, 0, bulletRotationOffset[0]));
-					}
-					bulletTime[1] = Time.time + bulletDelay[1];
-				}
-			}
-			else
-            {
-				//focus fire
-                if(Time.time > bulletTime[2])
-                {
-                    if (playerLevel == 1)
-                    {
-                        Instantiate(bullets[2], this.transform.position, Quaternion.Euler(0, 0, 0));
-                        Instantiate(bullets[2], orbiters[0].transform.position, Quaternion.Euler(0, 0, 0));
+                            Instantiate(bullets[1], orbiters[1].transform.position, Quaternion.Euler(0, 0, 0));
+                            Instantiate(bullets[1], new Vector3(orbiters[1].transform.position.x, orbiters[1].transform.position.y - bulletOffset[0], orbiters[1].transform.position.z), Quaternion.Euler(0, 0, bulletRotationOffset[0]));
+                            Instantiate(bullets[1], new Vector3(orbiters[1].transform.position.x, orbiters[1].transform.position.y - bulletOffset[1], orbiters[1].transform.position.z), Quaternion.Euler(0, 0, bulletRotationOffset[1]));
+
+                            Instantiate(bullets[1], orbiters[2].transform.position, Quaternion.Euler(0, 0, 0));
+                            Instantiate(bullets[1], new Vector3(orbiters[2].transform.position.x, orbiters[2].transform.position.y - bulletOffset[0], orbiters[2].transform.position.z), Quaternion.Euler(0, 0, -bulletRotationOffset[0]));
+                            Instantiate(bullets[1], new Vector3(orbiters[2].transform.position.x, orbiters[2].transform.position.y - bulletOffset[1], orbiters[2].transform.position.z), Quaternion.Euler(0, 0, -bulletRotationOffset[1]));
+
+                            Instantiate(bullets[1], orbiters[3].transform.position, Quaternion.Euler(0, 0, 0));
+                            Instantiate(bullets[1], new Vector3(orbiters[3].transform.position.x, orbiters[3].transform.position.y - bulletOffset[0], orbiters[3].transform.position.z), Quaternion.Euler(0, 0, -bulletRotationOffset[0]));
+                            Instantiate(bullets[1], new Vector3(orbiters[3].transform.position.x, orbiters[3].transform.position.y - bulletOffset[0], orbiters[3].transform.position.z), Quaternion.Euler(0, 0, bulletRotationOffset[0]));
+                        }
+                        bulletTime[1] = Time.time + bulletDelay[1];
                     }
-                    else if (playerLevel == 2)
-                    {
-                        Instantiate(bullets[2], this.transform.position, Quaternion.Euler(0, 0, 0));
-                        Instantiate(bullets[2], orbiters[1].transform.position, Quaternion.Euler(0, 0, 0));
-                        Instantiate(bullets[2], orbiters[2].transform.position, Quaternion.Euler(0, 0, 0));
-                    }
-                    else if (playerLevel == 3)
-                    {
-                        Instantiate(bullets[2], this.transform.position, Quaternion.Euler(0, 0, 0));
-                        Instantiate(bullets[2], orbiters[0].transform.position, Quaternion.Euler(0, 0, 0));
-                        Instantiate(bullets[2], orbiters[1].transform.position, Quaternion.Euler(0, 0, 0));
-                        Instantiate(bullets[2], orbiters[2].transform.position, Quaternion.Euler(0, 0, 0));
-                    }
-                    else if (playerLevel == 4)
-                    {
-                        Instantiate(bullets[2], this.transform.position, Quaternion.Euler(0, 0, 0));
-                        Instantiate(bullets[2], orbiters[0].transform.position, Quaternion.Euler(0, 0, 0));
-                        Instantiate(bullets[2], orbiters[1].transform.position, Quaternion.Euler(0, 0, 0));
-                        Instantiate(bullets[2], orbiters[2].transform.position, Quaternion.Euler(0, 0, 0));
-                        Instantiate(bullets[2], orbiters[3].transform.position, Quaternion.Euler(0, 0, 0));
-                    }
-                    bulletTime[2] = Time.time + bulletDelay[2];
                 }
-			}
-		}
+                else
+                {
+                    //focus fire
+                    if (Time.time > bulletTime[2])
+                    {
+                        if (playerLevel == 1)
+                        {
+                            Instantiate(bullets[2], this.transform.position, Quaternion.Euler(0, 0, 0));
+                            Instantiate(bullets[2], orbiters[0].transform.position, Quaternion.Euler(0, 0, 0));
+                        }
+                        else if (playerLevel == 2)
+                        {
+                            Instantiate(bullets[2], this.transform.position, Quaternion.Euler(0, 0, 0));
+                            Instantiate(bullets[2], orbiters[1].transform.position, Quaternion.Euler(0, 0, 0));
+                            Instantiate(bullets[2], orbiters[2].transform.position, Quaternion.Euler(0, 0, 0));
+                        }
+                        else if (playerLevel == 3)
+                        {
+                            Instantiate(bullets[2], this.transform.position, Quaternion.Euler(0, 0, 0));
+                            Instantiate(bullets[2], orbiters[0].transform.position, Quaternion.Euler(0, 0, 0));
+                            Instantiate(bullets[2], orbiters[1].transform.position, Quaternion.Euler(0, 0, 0));
+                            Instantiate(bullets[2], orbiters[2].transform.position, Quaternion.Euler(0, 0, 0));
+                        }
+                        else if (playerLevel == 4)
+                        {
+                            Instantiate(bullets[2], this.transform.position, Quaternion.Euler(0, 0, 0));
+                            Instantiate(bullets[2], orbiters[0].transform.position, Quaternion.Euler(0, 0, 0));
+                            Instantiate(bullets[2], orbiters[1].transform.position, Quaternion.Euler(0, 0, 0));
+                            Instantiate(bullets[2], orbiters[2].transform.position, Quaternion.Euler(0, 0, 0));
+                            Instantiate(bullets[2], orbiters[3].transform.position, Quaternion.Euler(0, 0, 0));
+                        }
+                        bulletTime[2] = Time.time + bulletDelay[2];
+                    }
+                }
+            }
+        }
+        //In Overdrive
+        else
+        {
+            if (Input.GetButton("Fire1"))
+            {
+                if (!shipFocus)
+                {
+                    if (Time.time > bulletTime[0])
+                    {
+                        Instantiate(overdriveBullets[0], bulletSpawn[0].transform.position, bulletSpawn[0].transform.rotation);
+                        Instantiate(overdriveBullets[0], bulletSpawn[1].transform.position, bulletSpawn[1].transform.rotation);
+                        Instantiate(overdriveBullets[0], new Vector3(bulletSpawn[0].transform.position.x - 0.2f, bulletSpawn[0].transform.position.y - 0.2f, bulletSpawn[0].transform.position.x), bulletSpawn[0].transform.rotation);
+                        Instantiate(overdriveBullets[0], new Vector3(bulletSpawn[1].transform.position.x + 0.2f, bulletSpawn[1].transform.position.y - 0.2f, bulletSpawn[0].transform.position.x), bulletSpawn[0].transform.rotation);
+
+                        bulletTime[0] = Time.time + bulletDelay[0];
+                    }
+                    if (Time.time > bulletTime[1])
+                    {
+                        Instantiate(overdriveBullets[1], orbiters[0].transform.position, Quaternion.Euler(0, 0, 0));
+                        Instantiate(overdriveBullets[1], new Vector3(orbiters[0].transform.position.x, orbiters[0].transform.position.y - bulletOffset[0], orbiters[0].transform.position.z), Quaternion.Euler(0, 0, 10));
+                        Instantiate(overdriveBullets[1], new Vector3(orbiters[0].transform.position.x, orbiters[0].transform.position.y - bulletOffset[0], orbiters[0].transform.position.z), Quaternion.Euler(0, 0, -10));
+                        //Instantiate(overdriveBullets[1], new Vector3(orbiters[0].transform.position.x, orbiters[0].transform.position.y - bulletOffset[1], orbiters[0].transform.position.z), Quaternion.Euler(0, 0, 20));
+                        //Instantiate(overdriveBullets[1], new Vector3(orbiters[0].transform.position.x, orbiters[0].transform.position.y - bulletOffset[1], orbiters[0].transform.position.z), Quaternion.Euler(0, 0, -20));
+
+                        Instantiate(overdriveBullets[1], orbiters[1].transform.position, Quaternion.Euler(0, 0, 0));
+                        Instantiate(overdriveBullets[1], new Vector3(orbiters[1].transform.position.x, orbiters[1].transform.position.y - bulletOffset[0], orbiters[1].transform.position.z), Quaternion.Euler(0, 0, 10));
+                        //Instantiate(overdriveBullets[1], new Vector3(orbiters[1].transform.position.x, orbiters[1].transform.position.y - bulletOffset[0], orbiters[1].transform.position.z), Quaternion.Euler(0, 0, -10));
+                        Instantiate(overdriveBullets[1], new Vector3(orbiters[1].transform.position.x, orbiters[1].transform.position.y - bulletOffset[1], orbiters[1].transform.position.z), Quaternion.Euler(0, 0, 20));
+                        //Instantiate(overdriveBullets[1], new Vector3(orbiters[1].transform.position.x, orbiters[1].transform.position.y - bulletOffset[1], orbiters[1].transform.position.z), Quaternion.Euler(0, 0, -20));
+
+                        Instantiate(overdriveBullets[1], orbiters[2].transform.position, Quaternion.Euler(0, 0, 0));
+                        //Instantiate(overdriveBullets[1], new Vector3(orbiters[2].transform.position.x, orbiters[2].transform.position.y - bulletOffset[0], orbiters[2].transform.position.z), Quaternion.Euler(0, 0, 10));
+                        Instantiate(overdriveBullets[1], new Vector3(orbiters[2].transform.position.x, orbiters[2].transform.position.y - bulletOffset[0], orbiters[2].transform.position.z), Quaternion.Euler(0, 0, -10));
+                        //Instantiate(overdriveBullets[1], new Vector3(orbiters[2].transform.position.x, orbiters[2].transform.position.y - bulletOffset[1], orbiters[2].transform.position.z), Quaternion.Euler(0, 0, 20));
+                        Instantiate(overdriveBullets[1], new Vector3(orbiters[2].transform.position.x, orbiters[2].transform.position.y - bulletOffset[1], orbiters[2].transform.position.z), Quaternion.Euler(0, 0, -20));
+
+                        Instantiate(overdriveBullets[1], orbiters[3].transform.position, Quaternion.Euler(0, 0, 0));
+                        Instantiate(overdriveBullets[1], new Vector3(orbiters[3].transform.position.x, orbiters[3].transform.position.y - bulletOffset[0], orbiters[3].transform.position.z), Quaternion.Euler(0, 0, 10));
+                        Instantiate(overdriveBullets[1], new Vector3(orbiters[3].transform.position.x, orbiters[3].transform.position.y - bulletOffset[0], orbiters[3].transform.position.z), Quaternion.Euler(0, 0, -10));
+                        //Instantiate(overdriveBullets[1], new Vector3(orbiters[3].transform.position.x, orbiters[3].transform.position.y - bulletOffset[1], orbiters[3].transform.position.z), Quaternion.Euler(0, 0, 20));
+                        //Instantiate(overdriveBullets[1], new Vector3(orbiters[3].transform.position.x, orbiters[3].transform.position.y - bulletOffset[1], orbiters[3].transform.position.z), Quaternion.Euler(0, 0, -20));
+
+                        bulletTime[1] = Time.time + bulletDelay[1];
+                    }
+                }
+                else
+                {
+                    if (Time.time > bulletTime[2])
+                    {
+                        Instantiate(overdriveBullets[1], this.transform.position, Quaternion.Euler(0, 0, 0));
+                        Instantiate(overdriveBullets[1], orbiters[0].transform.position, Quaternion.Euler(0, 0, 0));
+                        Instantiate(overdriveBullets[1], orbiters[1].transform.position, Quaternion.Euler(0, 0, 0));
+                        Instantiate(overdriveBullets[1], orbiters[2].transform.position, Quaternion.Euler(0, 0, 0));
+                        Instantiate(overdriveBullets[1], orbiters[3].transform.position, Quaternion.Euler(0, 0, 0));
+
+                        bulletTime[2] = Time.time + bulletDelay[2];
+                    }
+                }
+            } 
+        }
 	}
 
     //function to handle Special Activation
@@ -260,7 +332,6 @@ public class PlayerController : MonoBehaviour
             specialInterval[1] = false;
             //specialMeter -= 25;
             specialTimeFinish = specialTime + Time.time;
-            
         }
         //if special is pressed but not enough meter
         else if(Input.GetButtonDown("SpecialFire1") && !special && specialMeter <= specialCost1)
@@ -297,6 +368,27 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("Special Finish!");
             }
         }
+    }
+
+    void handleOverdrive()
+    {
+        if(Input.GetButtonDown("Overdrive") && specialMeter == specialMeterMax)
+        {
+            Debug.Log("OVERDRIVE!");
+            //specialMeter = 0;
+            overdriveTimeFinish = Time.time + overdriveTime;
+            overdrive = true;
+        }
+
+        if (overdrive)
+        {
+            if(Time.time > overdriveTimeFinish)
+            {
+                Debug.Log("Overdrive Finish");
+                overdrive = false;
+            }
+        }
+        
     }
 
     //function to handle the controls of the orbiters
