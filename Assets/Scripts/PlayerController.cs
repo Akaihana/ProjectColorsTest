@@ -20,12 +20,11 @@ public class PlayerController : MonoBehaviour
     public bool overdrive = false;
     //public bool overdrive = true;
 
-
     private float maxX = 3.35f;                     //player boundary maximum x
 	private float maxY = 4.85f;                     //player boundary maximum y
 
-    private float[] bulletTime = { 0, 0, 0 };
-    public float[] bulletDelay = { 0.075f, 0.25f, 0f };
+    private float[] bulletTime = { 0, 0, 0, 0 };
+    public float[] bulletDelay = { 0.075f, 0.25f, 0f, 0.025f };
     public float[] bulletOffset = { 0.4f, 0.8f };
     private float[] bulletRotationOffset = { 8f, 16f };
 
@@ -118,7 +117,6 @@ public class PlayerController : MonoBehaviour
 			moveSpeed = 0.05f;
 		else
 			moveSpeed = 0.1f;
-
 
         //debugging buttons for testing ship levels
         if (Input.GetKeyDown("1"))
@@ -260,64 +258,31 @@ public class PlayerController : MonoBehaviour
                 if (!shipFocus)
                 {
                     
-                    if (Time.time > bulletTime[0])
+                    if (Time.time > bulletTime[3])
                     {
-                        /*
-                        Instantiate(overdriveBullets[0], bulletSpawn[0].transform.position, bulletSpawn[0].transform.rotation);
-                        Instantiate(overdriveBullets[0], bulletSpawn[1].transform.position, bulletSpawn[1].transform.rotation);
-                        Instantiate(overdriveBullets[0], new Vector3(bulletSpawn[0].transform.position.x - 0.2f, bulletSpawn[0].transform.position.y - 0.2f, bulletSpawn[0].transform.position.x), bulletSpawn[0].transform.rotation);
-                        Instantiate(overdriveBullets[0], new Vector3(bulletSpawn[1].transform.position.x + 0.2f, bulletSpawn[1].transform.position.y - 0.2f, bulletSpawn[0].transform.position.x), bulletSpawn[0].transform.rotation);
+                        Instantiate(overdriveBullets[1], orbiters[3].transform.position, Quaternion.Euler(0, 0, Random.Range(-10f, 10f)));
+                        Instantiate(overdriveBullets[1], bulletSpawn[0].transform.position, Quaternion.Euler(0, 0, Random.Range(5f, 15f)));
+                        Instantiate(overdriveBullets[1], bulletSpawn[1].transform.position, Quaternion.Euler(0, 0, Random.Range(-5f, -15f)));
 
-                        bulletTime[0] = Time.time + bulletDelay[0];
-                        */
-                    //}
-                    //if (Time.time > bulletTime[0])
-                    //{
-                        //Instantiate(overdriveBullets[1], orbiters[2].transform.position, Quaternion.Euler(0, 0, -60));
-                        Instantiate(overdriveBullets[1], orbiters[2].transform.position, Quaternion.Euler(0, 0, Random.Range(-120f, -170f)));
-                        Instantiate(overdriveBullets[2], orbiters[1].transform.position, Quaternion.Euler(0, 0, Random.Range(120f, 170f)));
-
-                        /*
-                        Instantiate(overdriveBullets[1], orbiters[0].transform.position, Quaternion.Euler(0, 0, 0));
-                        Instantiate(overdriveBullets[1], new Vector3(orbiters[0].transform.position.x, orbiters[0].transform.position.y - bulletOffset[0], orbiters[0].transform.position.z), Quaternion.Euler(0, 0, 10));
-                        Instantiate(overdriveBullets[1], new Vector3(orbiters[0].transform.position.x, orbiters[0].transform.position.y - bulletOffset[0], orbiters[0].transform.position.z), Quaternion.Euler(0, 0, -10));
-                        //Instantiate(overdriveBullets[1], new Vector3(orbiters[0].transform.position.x, orbiters[0].transform.position.y - bulletOffset[1], orbiters[0].transform.position.z), Quaternion.Euler(0, 0, 20));
-                        //Instantiate(overdriveBullets[1], new Vector3(orbiters[0].transform.position.x, orbiters[0].transform.position.y - bulletOffset[1], orbiters[0].transform.position.z), Quaternion.Euler(0, 0, -20));
-
-                        Instantiate(overdriveBullets[1], orbiters[1].transform.position, Quaternion.Euler(0, 0, 0));
-                        Instantiate(overdriveBullets[1], new Vector3(orbiters[1].transform.position.x, orbiters[1].transform.position.y - bulletOffset[0], orbiters[1].transform.position.z), Quaternion.Euler(0, 0, 10));
-                        //Instantiate(overdriveBullets[1], new Vector3(orbiters[1].transform.position.x, orbiters[1].transform.position.y - bulletOffset[0], orbiters[1].transform.position.z), Quaternion.Euler(0, 0, -10));
-                        Instantiate(overdriveBullets[1], new Vector3(orbiters[1].transform.position.x, orbiters[1].transform.position.y - bulletOffset[1], orbiters[1].transform.position.z), Quaternion.Euler(0, 0, 20));
-                        //Instantiate(overdriveBullets[1], new Vector3(orbiters[1].transform.position.x, orbiters[1].transform.position.y - bulletOffset[1], orbiters[1].transform.position.z), Quaternion.Euler(0, 0, -20));
-
-                        Instantiate(overdriveBullets[1], orbiters[2].transform.position, Quaternion.Euler(0, 0, 0));
-                        //Instantiate(overdriveBullets[1], new Vector3(orbiters[2].transform.position.x, orbiters[2].transform.position.y - bulletOffset[0], orbiters[2].transform.position.z), Quaternion.Euler(0, 0, 10));
-                        Instantiate(overdriveBullets[1], new Vector3(orbiters[2].transform.position.x, orbiters[2].transform.position.y - bulletOffset[0], orbiters[2].transform.position.z), Quaternion.Euler(0, 0, -10));
-                        //Instantiate(overdriveBullets[1], new Vector3(orbiters[2].transform.position.x, orbiters[2].transform.position.y - bulletOffset[1], orbiters[2].transform.position.z), Quaternion.Euler(0, 0, 20));
-                        Instantiate(overdriveBullets[1], new Vector3(orbiters[2].transform.position.x, orbiters[2].transform.position.y - bulletOffset[1], orbiters[2].transform.position.z), Quaternion.Euler(0, 0, -20));
-
-                        Instantiate(overdriveBullets[1], orbiters[3].transform.position, Quaternion.Euler(0, 0, 0));
-                        Instantiate(overdriveBullets[1], new Vector3(orbiters[3].transform.position.x, orbiters[3].transform.position.y - bulletOffset[0], orbiters[3].transform.position.z), Quaternion.Euler(0, 0, 10));
-                        Instantiate(overdriveBullets[1], new Vector3(orbiters[3].transform.position.x, orbiters[3].transform.position.y - bulletOffset[0], orbiters[3].transform.position.z), Quaternion.Euler(0, 0, -10));
-                        //Instantiate(overdriveBullets[1], new Vector3(orbiters[3].transform.position.x, orbiters[3].transform.position.y - bulletOffset[1], orbiters[3].transform.position.z), Quaternion.Euler(0, 0, 20));
-                        //Instantiate(overdriveBullets[1], new Vector3(orbiters[3].transform.position.x, orbiters[3].transform.position.y - bulletOffset[1], orbiters[3].transform.position.z), Quaternion.Euler(0, 0, -20));
-                        */
-                        bulletTime[0] = Time.time + bulletDelay[0];
+                        Instantiate(overdriveBullets[2], orbiters[1].transform.position, Quaternion.Euler(0, 0, Random.Range(120f, 160f)));
+                        Instantiate(overdriveBullets[3], orbiters[2].transform.position, Quaternion.Euler(0, 0, Random.Range(-120f, -160f)));
+                        Instantiate(overdriveBullets[2], orbiters[0].transform.position, Quaternion.Euler(0, 0, Random.Range(120f, 160f)));
+                        Instantiate(overdriveBullets[3], orbiters[0].transform.position, Quaternion.Euler(0, 0, Random.Range(-120f, -160f)));
+                        
+                        bulletTime[3] = Time.time + bulletDelay[3];
                     }
                 }
                 else
                 {
-                    if (Time.time > bulletTime[2])
+                    if (Time.time > bulletTime[3])
                     {
-                        /*
-                        Instantiate(overdriveBullets[1], this.transform.position, Quaternion.Euler(0, 0, 0));
-                        Instantiate(overdriveBullets[1], orbiters[0].transform.position, Quaternion.Euler(0, 0, 0));
-                        Instantiate(overdriveBullets[1], orbiters[1].transform.position, Quaternion.Euler(0, 0, 0));
-                        Instantiate(overdriveBullets[1], orbiters[2].transform.position, Quaternion.Euler(0, 0, 0));
-                        Instantiate(overdriveBullets[1], orbiters[3].transform.position, Quaternion.Euler(0, 0, 0));
-
-                        bulletTime[2] = Time.time + bulletDelay[2];
-                        */
+                        Instantiate(overdriveBullets[1], this.transform.position, Quaternion.Euler(0, 0, Random.Range(-5f, 5f)));
+                        Instantiate(overdriveBullets[1], orbiters[0].transform.position, Quaternion.Euler(0, 0, Random.Range(-5f, 5f)));
+                        Instantiate(overdriveBullets[1], orbiters[1].transform.position, Quaternion.Euler(0, 0, Random.Range(-5f, 5f)));
+                        Instantiate(overdriveBullets[1], orbiters[2].transform.position, Quaternion.Euler(0, 0, Random.Range(-5f, 5f)));
+                        Instantiate(overdriveBullets[1], orbiters[3].transform.position, Quaternion.Euler(0, 0, Random.Range(-5f, 5f)));
+                        
+                        bulletTime[3] = Time.time + bulletDelay[3];
                     }
                 }
             } 
